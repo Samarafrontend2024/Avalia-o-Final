@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!-- Documento tipo HTML -->
+<html lang="pt-BR">
+<!-- Cabeçalho -->
+<head>
+    <meta charset="UTF-8">
+    <!-- Definição do padrão de caracteres -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <!-- (meta)Tag de definição da visualização gráfica do conteúdo (largura igual ao dispositivo do usuário) -->
+     <!-- Meu título -->
+    <title>Samara- QUA.207.077</title>
+    <!-- Tag para iniciar estilização CSS -->
+    <style>
+/* Corpo do site (body) */
+        body {
+            /* Define fonte principal/família */
+            font-family: 'Arial', sans-serif; 
+            /* Define cor de fundo do corpo (linear-grandient = degrader) */
+            background: linear-gradient(to bottom, #007070, #00191d);
+            /* Define cor do texto dentro do JS (clicar em mostrar itens) */
+             color: #000000;
+            /* Espaço entre barra de comando e início do site (parte superior) */
+            margin: 0;
+            /* Define o espaçamento do intem até a borda (avaliação final) */
+            padding: 0;
+            /* Define a centralização do item */
+            display: flex;
+            /* Define a centralização do item (pouca diferença entre 'display') */
+            justify-content: center;
+            /* Mexe com a centralização também, mas não achei interessante. */
+            align-items: center;
+            /* Define altura max do item, esquecito. */
+            height: 100vh;
+            /* Define colunas no site. */
+            flex-direction: column;
+        }
+        /* H1 = a título maior */
+        h1 {
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            color: #4CAF50;
+            text-align: center;
+            font-size: 2.5rem;
+            border: 2px solid #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: #45a049;
+            box-shadow: 0 0 5px #45a049;
+        }
+
+        table {
+            /* Espaço entre os butoes (enviar/mostrar) */
+            margin-top: 20px;
+            /* Configuração da tabela. */
+            border-collapse: collapse ;
+            /* Define a altura da tabela. */
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #4CAF50;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #drag-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        
+        .task {
+            padding: 10px;
+            background-color: #3b2702;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: grab;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .task:hover {
+            transform: scale(1.1);
+        }
+        /* Paragráfo de estilização de cores e tamanho (pontilhado). */
+        #drop-area {
+            width: 200px;
+            height: 150px;
+            border: 2px dashed #f1f1f1;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4CAF50;
+        }
+
+        #drop-area.drag-over {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+    </style>
+<!-- Cabeçalho -->
+</head>
+<!-- Corpo do site -->
+<body>
+
+
+    <h1>Avaliação Final</h1>
+    <!-- Linha de comando (barra branca) -->
+    <input type="text" id="userInput" placeholder="Digite algo...">
+    <!-- Quando clicar irá acontecer um alerta (enviar) -->
+    <button onclick="showAlert()">Enviar</button>
+
+    <!-- Define tabela e o estilo -->
+    <table id="itemTable" style="display:none;">
+        <!-- Cabeçalho da tabela -->
+        <thead>
+            <!-- Linha da tabela -->
+            <tr>
+                <th>Item</th>
+            </tr>
+        </thead>
+        <!-- Corpo da tabela -->
+        <tbody id="tableBody"></tbody>
+    </table>
+    <!-- Botão de comando (mostrar itens) -->
+    <button onclick="showItems()">Mostrar Itens</button>
+
+    <!-- Divisão das tarefas -->
+    <div id="drag-container">
+        <div id="task1" class="task" draggable="true" ondragstart="dragStart(event)">Tarefa 1</div>
+        <div id="task2" class="task" draggable="true" ondragstart="dragStart(event)">Tarefa 2</div>
+        <div id="task3" class="task" draggable="true" ondragstart="dragStart(event)">Tarefa 3</div>
+    </div>
+    <!-- Area de arraste aqui -->
+    <div id="drop-area" ondragover="allowDrop(event)" ondrop="dropTask(event)">Arraste aqui</div>
+
+    <script>
+        // Função para mostrar um alerta conforme o que for digitado ou não pelo usuário.
+        function showAlert() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput) {
+                alert('Você digitou: ' + userInput);
+            } else {
+                alert('Por favor, digite algo.');
+            }
+        }
+        const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+        function showItems() {
+            const table = document.getElementById('itemTable');
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.textContent = item;
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+            });
+            table.style.display = 'table';
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+            const dropArea = document.getElementById('drop-area');
+            dropArea.classList.add('drag-over');
+        }
+        function dragStart(event) {
+            event.dataTransfer.setData('text', event.target.id);
+        }
+        function dropTask(event) {
+            event.preventDefault();
+            const taskId = event.dataTransfer.getData('text');
+            const task = document.getElementById(taskId);
+            const dropArea = document.getElementById('drop-area');
+            dropArea.appendChild(task);
+            dropArea.classList.remove('drag-over');
+        }
+    </script>
+</body>
+</html>
